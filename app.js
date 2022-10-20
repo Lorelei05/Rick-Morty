@@ -7,8 +7,8 @@ const loadData = (url,page = 1) => {
 .then(respJson => {
     const info = respJson.info;
     const personajes = respJson.results;
-    console.log(info.next);
-    console.log(info.prev);
+    //console.log(info.next);
+    //console.log(info.prev);
     // creaButtons();
     if(!info.prev){
         document.querySelector('#prev').classList.add('disabled')
@@ -28,6 +28,27 @@ const loadData = (url,page = 1) => {
 
 }
 
+const loadCharterInfo=(url,id) => {
+    let urlCharter = `${url}${id}`;
+    console.log(urlCharter)
+    fetch(urlCharter)
+    .then(respuesta => respuesta.json())
+    .then(personaje => {
+        //TODO: implementar mosal con info del personaje
+        alert(personaje.name);
+    });
+
+}
+
+const showModal = (e) => {
+    e.preventDefault();
+    if(e.target.classList.contains('btn')){
+        let id = e.target.getAttribute('data-id');
+        loadCharterInfo(urlBase, id);
+    }
+}
+
+document.querySelector('#respuesta').addEventListener('click', showModal);
 
 const navegacion = (e) => {
     e.preventDefault();
@@ -36,7 +57,6 @@ const navegacion = (e) => {
         loadData(urlBase, page);
     }
 }
-
 
 loadData(urlBase);
 
@@ -56,12 +76,12 @@ const showCharacters = (personajes) => {
 const creaCard = (personaje) => {
    const card = document.createElement('div');
     const html = `
-    <div class="card m-3" style="width: 18rem; float: left;">
-    <img src="${personaje.image}" class="card-img-top" alt="...">
+    <div class="card m-2" style="width: 18rem; float: left;">
+    <img loading="lizy" src="${personaje.image}" class="card-img-top" alt="...">
     <div class="card-body">
       <h5 class="card-title">${personaje.name}</h5>
       <p class="card-text">${personaje.status}</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+      <button class="btn btn-primary btn-block" data-id=${personaje.id}>Go somewhere</a>
     </div>
   </div>`;
   card.innerHTML = html;
