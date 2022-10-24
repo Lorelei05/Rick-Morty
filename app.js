@@ -30,15 +30,21 @@ const loadData = (url,page = 1) => {
 
 const loadCharterInfo=(url,id) => {
     let urlCharter = `${url}${id}`;
-    console.log(urlCharter)
+    console.log(urlCharter);
+    const modalContent = document.querySelector('.modal-body');
+    modalContent.removeChild(modalContent.firstChild);
+    modalContent.innerHTML = spinner();
+    setTimeout(() => {
+        
     fetch(urlCharter)
     .then(respuesta => respuesta.json())
     .then(personaje => {
         //TODO: implementar mosal con info del personaje
-        console.log(personaje);
-        alert(personaje.name);
+        modalContent.removeChild(modalContent.firstChild);
+        const html = `<div>${personaje.name}</div>`;
+        modalContent.innerHTML = html;
     });
-
+    },2000);
 }
 
 const showModal = (e) => {
