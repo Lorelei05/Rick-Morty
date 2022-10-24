@@ -35,6 +35,7 @@ const loadCharterInfo=(url,id) => {
     .then(respuesta => respuesta.json())
     .then(personaje => {
         //TODO: implementar mosal con info del personaje
+        console.log(personaje);
         alert(personaje.name);
     });
 
@@ -72,6 +73,15 @@ const showCharacters = (personajes) => {
 })
 }
 
+const spinner = () => {
+     const html =
+        `<div class="d-flex justify-content-center">
+            <div class="spinner-border text-info" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>`;
+        return html;
+}
 
 const creaCard = (personaje) => {
    const card = document.createElement('div');
@@ -81,7 +91,11 @@ const creaCard = (personaje) => {
     <div class="card-body">
       <h5 class="card-title">${personaje.name}</h5>
       <p class="card-text">${personaje.status}</p>
-      <button class="btn btn-primary btn-block" data-id=${personaje.id}>Go somewhere</a>
+      <button
+           class="btn btn-primary btn-block" 
+           data-id=${personaje.id}
+           data-bs-toggle="modal" 
+           data-bs-target="#exampleModal">Ver mas</button>
     </div>
   </div>`;
   card.innerHTML = html;
