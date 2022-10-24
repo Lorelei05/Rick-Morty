@@ -28,42 +28,62 @@ const loadData = (url,page = 1) => {
 
 }
 
-const loadCharterInfo=(url,id) => {
-    let urlCharter = `${url}${id}`;
-    console.log(urlCharter);
+const loadCharacterInfo = (url, id) =>{
+
+    let urlCharacter = `${url}${id}`;
+    console.log(urlCharacter)
     const modalContent = document.querySelector('.modal-body');
     modalContent.removeChild(modalContent.firstChild);
     modalContent.innerHTML = spinner();
     setTimeout(() => {
-        
-    fetch(urlCharter)
-    .then(respuesta => respuesta.json())
-    .then(personaje => {
-        //TODO: implementar mosal con info del personaje
-        modalContent.removeChild(modalContent.firstChild);
-        const html = `<div>${personaje.name}</div>`;
-        modalContent.innerHTML = html;
-    });
-    },2000);
+
+        fetch(urlCharacter)
+        .then(respuesta => respuesta.json())
+        .then(personaje => {
+            //TODO: Implmentar modal con info del personaje
+            modalContent.removeChild(modalContent.firstChild);
+            document.querySelector('.modal-title').innerText = personaje.name;
+            modalContent.appendChild(modalBody(personaje));
+        });
+    }, 1000 );
+}
+
+const modalBody = (personaje) => {
+    const div = document.createElement('div');
+    const origen = personaje.origin.name;
+    const location = personaje.location.name;
+    const episodes = personaje.episode.length;
+    let html = '';
+    html += origen === 'unknown'? `<p>Se desconoce su origen</p>`:
+                        `<p> Viene de ${origen}</p>`;
+    html += `Se encuentra en ${location}`;
+    html += `<img src="${personaje.image}" class="">`;
+    html += `<p>Aparece en el ${episodes} episodio </p>`;
+    div.innerHTML = html;
+    return div;
+
 }
 
 const showModal = (e) => {
     e.preventDefault();
     if(e.target.classList.contains('btn')){
         let id = e.target.getAttribute('data-id');
-        loadCharterInfo(urlBase, id);
+        loadCharacterInfo(urlBase, id);
     }
 }
 
 document.querySelector('#respuesta').addEventListener('click', showModal);
 
+
 const navegacion = (e) => {
-    e.preventDefault();
+     let page = e.target.getAttribute('data-id');
+        e.preventDefault();
     if(e.target.classList.contains('btn')){
-        let page = e.target.getAttribute('data-id');
-        loadData(urlBase, page);
+        let page = e.target.getAttribute('data-id')
+       loadData(urlBase, page);
     }
 }
+
 
 loadData(urlBase);
 
@@ -79,50 +99,32 @@ const showCharacters = (personajes) => {
 })
 }
 
-const spinner = () => {
-     const html =
-        `<div class="d-flex justify-content-center">
-            <div class="spinner-border text-info" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>`;
-        return html;
+const spinner = () =>{
+    const html = 
+    `<div class="d-flex align-items-center">
+        <strong>Loading...</strong>
+        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+        </div>
+    </div>`;
+  return html;
 }
 
 const creaCard = (personaje) => {
    const card = document.createElement('div');
     const html = `
-    <div class="card m-2" style="width: 18rem; float: left;">
-    <img loading="lizy" src="${personaje.image}" class="card-img-top" alt="...">
+    <div class="card m-3" style="width: 18rem; float: left;">
+    <img loading="lazy" src="${personaje.image}" class="card-img-top" alt="...">
     <div class="card-body">
       <h5 class="card-title">${personaje.name}</h5>
       <p class="card-text">${personaje.status}</p>
-      <button
-           class="btn btn-primary btn-block" 
-           data-id=${personaje.id}
-           data-bs-toggle="modal" 
-           data-bs-target="#exampleModal">Ver mas</button>
+      <button 
+      class="btn btn-primary btn-block"
+       data-id="${personaje.id}"
+       data-bs-toggle="modal" 
+       data-bs-target="#exampleModal">Ver Más</button>
+      
     </div>
   </div>`;
   card.innerHTML = html;
   return card;
 }
-
-
-
-
-/*const creaButtons = () => {
-    const contenedorButtons = document.querySelector('#botones');
-    contenedorButtons.innerText = '';    
-    const btnPrev = document.createElement('button');
-    btnPrev.id = 'prev';
-    btnPrev.className = 'btn btn-success btn-lg  mx-3';
-    btnPrev.innerText = 'Anterior';
-    contenedorButtons.appendChild(btnPrev);
-    const btnNext = document.createElement('button');
-    btnNext.id = 'next';
-    btnNext.className = 'btn btn-success btn-lg mx-3';
-    btnNext.innerText = 'Siguiente';
-    contenedorButtons.appendChild(btnNext);
-}
-*/
